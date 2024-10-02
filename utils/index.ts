@@ -1,4 +1,4 @@
 // const helper = require("./helper")
 
-// // index.ts
+// index.ts
 // export * as utils from './helper';

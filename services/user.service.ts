@@ -1,7 +1,8 @@
 import { Request } from "express";
 import { User } from "../entities/user.entity"; 
 import { AppDataSource } from "../config/data-source";
-// import { utils } from "../utils/helper"; 
+import { utils } from "../utils/index";
+
 
 export const createUser = async (userName: string, email: string, password: string) => {
     const userRepository = AppDataSource.getMongoRepository(User);
@@ -15,6 +16,10 @@ export const getAllUsers = async () => {
   return await userRepository.find();
 };
 
+export const getAllUsersById = async () => {
+  const userRepository = AppDataSource.getMongoRepository(User);
+  return await userRepository.find();
+};
 
 interface RegisterResponse {
   token: string;
@@ -32,14 +37,14 @@ export const register = async (req: Request): Promise<RegisterResponse> => {
       }
   
       const _password = hashToPassword(password);
-      const user = userRepository.create({ userName, email, password: _password, gender, weight, height, age });
+      const user = userRepository.create({ userName, email, password: password, gender, weight, height, age });
   
       await userRepository.save(user);
       
       const token = utils.helper.createToken(user.id, user.userName, user.email);
   
-      // Telegram ile ilgili kısmı kaldırdık
-      return { token, user }; // telegramResult artık yok
+
+      return { token, user }; 
     } catch (error: any) {
       throw new Error(error.message);
     }
@@ -48,3 +53,4 @@ export const register = async (req: Request): Promise<RegisterResponse> => {
   function hashToPassword(_password: any) {
       throw new Error("Function not implemented.");
   }
+

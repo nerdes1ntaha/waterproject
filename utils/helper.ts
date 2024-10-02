@@ -1,13 +1,14 @@
-import md5 from "md5";
+// import md5 from "md5";
 import { validationResult, ValidationError } from "express-validator";
 import jsonwebtoken, { JwtPayload } from "jsonwebtoken";
 import dns from "dns";
 import os from "os";
-import { Request, Response, NextFunction } from "express";
+import { Request } from "express";
+import bcrypt from 'bcrypt';
 
-export const hashToPassword = (password: string): string => {
-  return md5(password);
-};
+async function comparePassword(password: string, hashedPassword: string): Promise<boolean> {
+  return await bcrypt.compare(password, hashedPassword);
+}
 
 export const handleValidation = (req: Request) => {
   const validationErrors = validationResult(req);
